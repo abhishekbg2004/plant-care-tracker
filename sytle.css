@@ -1,4 +1,4 @@
-/* General Styles */
+
 body {
     font-family: 'Quicksand', sans-serif;
     line-height: 1.6;
@@ -9,7 +9,7 @@ body {
     min-height: 100vh;
 }
 
-/* Registration Container */
+
 .registration-container {
     display: flex;
     justify-content: center;
@@ -50,14 +50,14 @@ body {
     background-color: #388e3c;
 }
 
-/* Container Styles */
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* Header Styles */
+
 header {
     text-align: center;
     margin-bottom: 30px;
@@ -112,7 +112,7 @@ h2 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Styles */
+
 .form-group {
     margin-bottom: 15px;
 }
@@ -154,7 +154,7 @@ button {
     background-color: #388e3c;
 }
 
-/* Plant Cards Styles */
+
 .search-filter {
     display: flex;
     gap: 10px;
@@ -267,7 +267,7 @@ button {
     margin-bottom: 20px;
 }
 
-/* Stats Section Styles */
+
 .stats-section {
     background: white;
     padding: 20px;
@@ -332,7 +332,7 @@ button {
     font-weight: bold;
 }
 
-/* Footer Styles */
+
 footer {
     text-align: center;
     padding: 20px;
@@ -349,7 +349,7 @@ footer i {
     color: #f44336;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .main-content {
         flex-direction: column;
@@ -367,7 +367,7 @@ footer i {
         flex-direction: column;
     }
 }
-/* Center only the registration container */
+
 .registration-container {
     display: flex;
     justify-content: center;
