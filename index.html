@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html ng-app="plantCareApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Care Tracker</title>
+    <link rel="stylesheet" href="sytle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body ng-controller="MainController as mainCtrl">
+    <!-- Registration Page (Centered) -->
+    <div class="registration-container" ng-if="!mainCtrl.isRegistered">
+        <div class="registration-box">
+            <h2><i class="fas fa-user-plus"></i> User Registration</h2>
+            <form ng-submit="mainCtrl.register()">
+                <div class="form-group">
+                    <label for="regName">Full Name:</label>
+                    <input type="text" id="regName" ng-model="mainCtrl.registerData.name" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email:</label>
+                    <input type="email" id="regEmail" ng-model="mainCtrl.registerData.email" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password:</label>
+                    <input type="password" id="regPassword" ng-model="mainCtrl.registerData.password" required>
+                </div>
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm Password:</label>
+                    <input type="password" id="regConfirmPassword" ng-model="mainCtrl.registerData.confirmPassword" required>
+                </div>
+                <button type="submit" class="btn-register">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application (shown after registration) -->
+    <div class="container" ng-if="mainCtrl.isRegistered">
+        <header>
+            <div class="user-info">
+                <span>Welcome, {{mainCtrl.currentUser.name}}!</span>
+            </div>
+            <h1><i class="fas fa-leaf"></i> GreenThumb Tracker</h1>
+            <p class="subtitle">Keep your plants happy and healthy!</p>
+        </header>
+
+        <div class="main-content">
+            <section class="plant-form">
+                <h2>Add New Plant</h2>
+                <form ng-submit="mainCtrl.addPlant()">
+                    <div class="form-group">
+                        <label for="plantName">Plant Name:</label>
+                        <input type="text" id="plantName" ng-model="mainCtrl.newPlant.name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="plantType">Plant Type:</label>
+                        <select id="plantType" ng-model="mainCtrl.newPlant.type" required>
+                            <option value="">Select type</option>
+                            <option value="Succulent">Succulent</option>
+                            <option value="Fern">Fern</option>
+                            <option value="Flowering">Flowering</option>
+                            <option value="Herb">Herb</option>
+                            <option value="Vegetable">Vegetable</option>
+                            <option value="Tree">Tree</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastWatered">Last Watered:</label>
+                        <input type="date" id="lastWatered" ng-model="mainCtrl.newPlant.lastWatered" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="waterFrequency">Water every (days):</label>
+                        <input type="number" id="waterFrequency" ng-model="mainCtrl.newPlant.waterFrequency" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="plantNotes">Notes:</label>
+                        <textarea id="plantNotes" ng-model="mainCtrl.newPlant.notes" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-add">Add Plant</button>
+                </form>
+            </section>
+
+            <section class="plant-list">
+                <h2>My Plant Collection</h2>
+                
+                <div class="search-filter">
+                    <input type="text" placeholder="Search plants..." ng-model="mainCtrl.searchText">
+                    <select ng-model="mainCtrl.filterType">
+                        <option value="">All Types</option>
+                        <option ng-repeat="type in mainCtrl.plantTypes" value="{{type}}">{{type}}</option>
+                    </select>
+                </div>
+                
+                <div class="plant-cards">
+                    <div class="plant-card" ng-repeat="plant in mainCtrl.plants | filter:mainCtrl.searchText | filter:mainCtrl.filterType">
+                        <div class="card-header" ng-style="{'background-color': mainCtrl.getPlantColor(plant.type)}">
+                            <h3>{{plant.name}}</h3>
+                            <span class="plant-type">{{plant.type}}</span>
+                        </div>
+                        <div class="card-body">
+                            <p><i class="fas fa-tint"></i> <strong>Water:</strong> Every {{plant.waterFrequency}} days</p>
+                            <p><i class="fas fa-calendar-day"></i> <strong>Last watered:</strong> {{plant.lastWatered | date:'MMM d, yyyy'}}</p>
+                            <p><i class="fas fa-clock"></i> <strong>Next watering:</strong> {{mainCtrl.getNextWateringDate(plant) | date:'MMM d, yyyy'}}</p>
+                            <p ng-class="{'urgent': mainCtrl.isWateringUrgent(plant)}">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                <strong>Status:</strong> {{mainCtrl.getWateringStatus(plant)}}
+                            </p>
+                            <p class="notes" ng-if="plant.notes"><i class="fas fa-sticky-note"></i> <strong>Notes:</strong> {{plant.notes}}</p>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-water" ng-click="mainCtrl.waterPlant(plant)">
+                                <i class="fas fa-tint"></i> Water Now
+                            </button>
+                            <button class="btn-edit" ng-click="mainCtrl.editPlant(plant)">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-delete" ng-click="mainCtrl.deletePlant(plant)">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="empty-state" ng-if="mainCtrl.plants.length === 0">
+                        <img src="https://cdn.pixabay.com/photo/2017/01/10/03/06/plant-1967088_960_720.png" alt="No plants" width="100">
+                        <p>No plants added yet. Add your first plant to get started!</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="stats-section">
+            <h2>Plant Care Statistics</h2>
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>{{mainCtrl.plants.length}}</h3>
+                    <p>Total Plants</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{mainCtrl.getPlantsNeedingWater().length}}</h3>
+                    <p>Need Watering</p>
+                </div>
+                <div class="stat-card">
+                    <h3>{{mainCtrl.getPlantTypesCount()}}</h3>
+                    <p>Different Types</p>
+                </div>
+            </div>
+            
+            <div class="water-schedule">
+                <h3>Upcoming Watering Schedule</h3>
+                <ul>
+                    <li ng-repeat="plant in mainCtrl.getUpcomingWateringPlants()">
+                        <span class="plant-name">{{plant.name}}</span> - 
+                        <span class="water-date">{{mainCtrl.getNextWateringDate(plant) | date:'MMM d'}}</span>
+                        <span class="water-status" ng-class="{'urgent': mainCtrl.isWateringUrgent(plant)}">
+                            ({{mainCtrl.getWateringStatus(plant)}})
+                        </span>
+                    </li>
+                    <li ng-if="mainCtrl.getUpcomingWateringPlants().length === 0">
+                        No plants need watering in the next few days!
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Created with <i class="fas fa-heart"></i> by Plant Lover</p>
+            <p class="small">A student project for Web Development Class</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

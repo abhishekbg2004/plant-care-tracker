@@ -1,0 +1,25 @@
+{
+    "plants": [
+        {
+            "name": "Snake Plant",
+            "type": "Succulent",
+            "lastWatered": "2023-10-15",
+            "waterFrequency": 14,
+            "notes": "Very hardy, can survive with little light"
+        },
+        {
+            "name": "Peace Lily",
+            "type": "Flowering",
+            "lastWatered": "2023-10-18",
+            "waterFrequency": 7,
+            "notes": "Likes humidity, keep away from direct sunlight"
+        },
+        {
+            "name": "Basil",
+            "type": "Herb",
+            "lastWatered": "2023-10-20",
+            "waterFrequency": 3,
+            "notes": "Needs lots of water and sunlight"
+        }
+    ]
+}
